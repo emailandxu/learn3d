@@ -1,20 +1,40 @@
-import pygame
-import os
-print(os.environ.get("SDL_VIDEODRIVER"))
-pygame.init()
-dis=pygame.display.set_mode((400,300))
- 
-pygame.display.set_caption('Snake game by Edureka')
- 
-blue=(0,0,255)
-red=(255,0,0)
- 
-game_over=False
-while not game_over:
-    for event in pygame.event.get():
-        if event.type==pygame.QUIT:
-            game_over=True
-    pygame.draw.rect(dis,blue,[200,150,10,10])
-    pygame.display.update()
-pygame.quit()
-quit()
+import pygame as pg
+import moderngl as mgl
+import sys
+from model import Triangle
+
+class Engine:
+    def __init__(self, win_size=(1600, 900)) -> None:
+        pg.init()
+        self.WIN_SIZE = win_size
+
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
+
+        pg.display.set_mode(self.WIN_SIZE, flags=pg.OPENGL | pg.DOUBLEBUF)
+        self.ctx = mgl.create_context()
+        self.clock = pg.time.Clock()
+        self.scene = Triangle(self)
+
+    def check_events(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT: #or (event.type == pg.KEYDOWN and event.key == pg.K_SPACE):
+                self.scene.destory()
+                pg.quit()
+                sys.exit()
+
+    def render(self):
+        self.ctx.clear(color=(0.08, 0.16, 0.18))
+        self.scene.render()
+        pg.display.flip()
+
+    def run(self):
+        while True:
+            self.check_events()
+            self.render()
+            self.clock.tick(60)
+
+if __name__ == "__main__":
+    engine = Engine()
+    engine.run()
