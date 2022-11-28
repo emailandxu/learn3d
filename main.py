@@ -22,6 +22,7 @@ class Engine:
         self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE)
         self.clock = pg.time.Clock()
         self.time = 0
+        self.delta_time = 0
         self.camera = Camera(self)
 
         self.scene = Cube(self)
@@ -49,12 +50,12 @@ class Engine:
         self.time = pg.time.get_ticks() * 0.001
 
     def run(self):
-        rot = Rotation.from_euler("zxy", (0, 0, 1), degrees=True)
         while True:
             self.get_time()
             self.check_events()
+            self.camera.update()
             self.render()
-            self.clock.tick(60)
+            self.delta_time = self.clock.tick(60)
 
 if __name__ == "__main__":
     engine = Engine()
