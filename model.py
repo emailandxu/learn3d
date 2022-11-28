@@ -1,4 +1,5 @@
 import numpy as np
+import pygame as pg
 import glm
 
 class Cube:
@@ -9,15 +10,27 @@ class Cube:
         self.shader_program = self.get_shader_program("default")
         self.vao = self.get_vao()
         self.m_model = self.get_model_matrix()
+        self.texture = self.get_texture(path="textures/test.png")
         self.on_init()
+
+    def get_texture(self, path):
+        texture = pg.image.load(path).convert()
+        texture = pg.transform.flip(texture, flip_x=False, flip_y=True)
+        texture = self.ctx.texture(size=texture.get_size(), components=3,
+                                    data=pg.image.tostring(texture, "RGB")) 
+        return texture
 
     def get_model_matrix(self):
         m_model = glm.mat4()
         return m_model
         
     def on_init(self):
+        self.shader_program["u_texture_0"] = 0
+        self.texture.use()
+
         self.shader_program["m_proj"].write(self.app.camera.m_proj)
         self.shader_program["m_view"].write(self.app.camera.m_view)
+        self.shader_program["m_model"].write(self.m_model)
 
     def update(self):
         m_model = glm.rotate(self.m_model, self.app.time, glm.vec3(0, 1, 0))

@@ -18,6 +18,8 @@ class Engine:
 
         pg.display.set_mode(self.WIN_SIZE, flags=pg.OPENGL | pg.DOUBLEBUF)
         self.ctx = mgl.create_context()
+        self.ctx.front_face = "ccw"
+        self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE)
         self.clock = pg.time.Clock()
         self.time = 0
         self.camera = Camera(self)
