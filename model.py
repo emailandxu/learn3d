@@ -10,7 +10,7 @@ class Cube:
         self.shader_program = self.get_shader_program("default")
         self.vao = self.get_vao()
         self.m_model = self.get_model_matrix()
-        self.texture = self.get_texture(path="textures/test.png")
+        self.texture = self.get_texture(path="textures/img.png")
         self.on_init()
 
     def get_texture(self, path):
@@ -33,7 +33,7 @@ class Cube:
         self.shader_program["m_model"].write(self.m_model)
 
     def update(self):
-        m_model = glm.rotate(self.m_model, self.app.time, glm.vec3(0, 1, 0))
+        m_model = glm.rotate(self.m_model, self.app.time * 0.5, glm.vec3(0, 1, 0))
         self.shader_program["m_model"].write(m_model)
 
     def render(self):
